@@ -1,28 +1,51 @@
-function validation(){
-    var message = document.getElementById('message');
-    var name = document.getElementById('name').value;
-    var email = document.getElementById('email').value;
-    var password = document.getElementById('password').value;
-    message.style.display = "none";
-    if(name.length==0){
-     message.innerText = "Please enter your User Name ";
-     message.style.display = "block";
-     return false;
- }
- 
- if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test('email')===false){
-     message.innerText = "Please enter a valid email";
-     message.style.display = "block";
-     return false;
-    }
- 
-    if(password.length <8){
-    message.innerText = "Password length must be greater than 8  ";
-    message.style.display = "block";
-    return false;
-    }
-    
-     alert("Sign Up Sucsess");
-     return false;
- }
- 
+const form = document.querySelector("form"),
+  emailField = form.querySelector(".email-field"),
+  emailInput = emailField.querySelector(".email"),
+  passField = form.querySelector(".create-password"),
+  passInput = passField.querySelector(".password"),
+  cPassField = form.querySelector(".confirm-password"),
+  cPassInput = cPassField.querySelector(".cPassword");
+
+function checkEmail() {
+  const emaiPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+  if (!emailInput.value.match(emaiPattern)) {
+    return emailField.classList.add("invalid");
+  }
+  emailField.classList.remove("invalid");
+}
+
+
+function createPass() {
+  const passPattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  if (!passInput.value.match(passPattern)) {
+    return passField.classList.add("invalid");
+  }
+  passField.classList.remove("invalid");
+}
+function confirmPass() {
+  if (passInput.value !== cPassInput.value || cPassInput.value === "") {
+    return cPassField.classList.add("invalid");
+  }
+  cPassField.classList.remove("invalid");
+}
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  checkEmail();
+  createPass();
+  confirmPass();
+
+  emailInput.addEventListener("keyup", checkEmail);
+  passInput.addEventListener("keyup", createPass);
+  cPassInput.addEventListener("keyup", confirmPass);
+
+  if (
+    !emailField.classList.contains("invalid") &&
+    !passField.classList.contains("invalid") &&
+    !cPassField.classList.contains("invalid")
+  ) {
+    location.href = form.getAttribute("action");
+  }
+});
